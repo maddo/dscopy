@@ -28,8 +28,10 @@ class FileMover:
             print "\nCopying id %s\n" % (id)
             src = self.getFullPath(id)
             if src:
-                print "\nCopying %s to %s\n" % (src, dst)
-                shutil.copy(src, dst)
+                filename =  src.split('/').pop()
+                final_dst = dst + filename[7:]
+                print "\nCopying %s to %s\n" % (src, final_dst)
+                shutil.copy(src, final_dst)
         print "\nDone with copy...\n"
         return True
         
