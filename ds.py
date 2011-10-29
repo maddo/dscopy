@@ -1,8 +1,12 @@
 #!/usr/bin/python
 
-import sys, os, re, shutil, fnmatch, pprint
+import shutil
+import glob
+import sys
+import os
+import re
 
-__version__ = (0,0,1)
+__version__ = (0,0,2)
 
 """
 Pass DS games from external to interal folder based on associated id
@@ -21,31 +25,24 @@ class FileMover:
     def copyAll(self):
         dst = self.destination_folder
         for id in self.ids:
-            print "\nCopying id " + str(id) + "\n"
+            print "\nCopying id %s\n" % (id)
             src = self.getFullPath(id)
             if src:
-                print "\nCopying " + src + " to " + dst + "\n"
+                print "\nCopying %s to %s\n" % (src, dst)
                 shutil.copy(src, dst)
         print "\nDone with copy...\n"
         return True
         
-    def getFullPath(self, id):
-        
-        id = str(id)
-        end = str(int(id[0:2])+1)
-        sub_folder = id[0:2] + '01-' + end + '00/'
+    def getFullPath(self, str_id):
+        id = int(str_id)
+        rangeStart = (id/100)*100 + 1
+        rangeEnd = (id/100)*100 + 100
+        sub_folder = "%0*d-%0*d/" % (4,rangeStart,4,rangeEnd)
         folder = self.source_folder + sub_folder
-        fullPath = self.locate(id, folder)
+        fullPath = glob.glob(folder + str_id + '*')
         if fullPath:
             return fullPath[0]
-        
-    def locate(self, pattern, root=os.curdir):
-        pattern = pattern + "*"
-        matches = []
-        for path, dirs, files in os.walk(os.path.abspath(root)):
-            for filename in fnmatch.filter(files, pattern):
-                matches.append(os.path.join(path, filename))
-        return matches
+
             
 class Menu:
 
