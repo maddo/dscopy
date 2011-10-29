@@ -6,7 +6,7 @@ import sys
 import os
 import re
 
-__version__ = (0,0,2)
+__version__ = (0,0,3)
 
 """
 Pass DS games from external to interal folder based on associated id
